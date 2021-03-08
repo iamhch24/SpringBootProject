@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+
+<div layout:fragment="content" id="content">
+ 	<div class="ui ">
+		<div class="ui icon message" id="successmessage" style="display: none">
+			<i class="notched circle loading icon"></i>
+			<div class="content">
+				<div class="msg-header" id="resultmessage">수정되었습니다.</div>
+			</div>
+		</div>
+		<table id="salaryrollExample" class="display nowrap" style="width: 100%">
+			<thead>
+				<tr>
+					<th>yyyy</th>
+					<th>mm</th>
+					<th>사원번호</th>
+					<th>부서</th>
+					<th>이름</th>
+					<th>배우자공제</th>
+					<th>부양가족20</th>
+					<th>부양가족60</th>
+					<th>장애인</th>
+					<th>월급여</th>
+					<th>국민연금</th>
+					<th>갑근세</th>
+					<th>수령액</th>
+					<th>option</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="salaryroll : ${salaryrolls}">
+					<td data-th-text="${salaryroll.name != null} ? ${salaryroll.yyyy} : ( ${salaryroll.depart != null} ? '소계' : '총 합계') "></td>
+					<td data-th-text="${salaryroll.name != null} ? ${salaryroll.mm} : ''"></td>
+					<td data-th-text="${salaryroll.name != null} ? ${salaryroll.empno} : ''"></td>
+					<td data-th-text="${salaryroll.depart}"></td>
+					<td data-th-text="${salaryroll.name}"></td>
+					<td data-th-text="${salaryroll.partner}"></td>
+					<td data-th-text="${salaryroll.dependent20}"></td>
+					<td data-th-text="${salaryroll.dependent60}"></td>
+					<td data-th-text="${salaryroll.disabled}"></td>
+					<td data-th-text="${salaryroll.mmpay}"></td>
+					<td data-th-text="${salaryroll.insurance}"></td>
+					<td data-th-text="${salaryroll.tax}"></td>
+					<td data-th-text="${salaryroll.lastamount}"></td>
+					<td><i class="edit outline icon" id="editbtn" style="cursor:pointer"></i> 
+					<i class="trash outline icon" id="deletebtn"  style="cursor:pointer"></i></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="ui mini modal">
+			<i class="close icon"></i>
+			<div class="header modalmsg">정말 삭제하시겠습니까?</div>
+			<div class="actions">
+				<div class="ui negative button" id="deleteOK">Yes 삭제</div>
+				<div class="ui positive right labeled icon button" id="deleteCancel">
+					No 취소<i class="checkmark icon"></i>
+				</div>
+			</div>
+		</div>
+	</div> 
+</div>
+<th:block layout:fragment="js">
+<script>
+	var table = $('#salaryrollExample').DataTable({
+		deferRender: true,
+		scrollY: 500,
+		scrollCollapse: true,
+		scroller: true,
+		aaSorting: []
+	});
+
+</script>
+</th:block>
+</html>

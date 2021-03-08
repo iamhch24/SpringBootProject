@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="css">
+<style>
+.field {
+	margin: 0 auto;
+	width: 300px;
+}
+.wrapper {
+	margin: 0 auto;
+	padding: 0 100px;
+}
+</style>
+</th:block>
+	
+<div layout:fragment="content" id="content">
+	<form class="ui form middle aligned" method="post" action="member_insertSave" id="memberForm">
+		<div class="wapper">
+		<input type="hidden" class="confirmyn" value="n">
+		<div class="two fields">
+			<div class="field">
+			<label>E-mail</label>
+			<div class="ui samll corner labeled left icon input">
+				<input placeholder="e-mail" type="email" name="email" id="email"
+					required> <i class="icon envelope"></i>
+				<div class="ui corner label">
+					<i class="asterisk icon"></i>
+				</div>
+			</div>
+			</div>
+			<div class="field">
+				<button class="ui basic button primary confirm" type="button" id="email-confirm">중복체크</button>
+			</div>
+			<label id="email-error" class="error" for="email"></label>
+		</div>
+		<div class="field">
+			<label>Username</label>
+			<div class="ui samll corner labeled left icon input">
+				<input placeholder="Username" type="text" name="name" required
+					onclick="confirmyn()"> <i class="icon user"></i>
+				<div class="ui corner label">
+					<i class="asterisk icon"></i>
+				</div>
+			</div>
+			<label id="name-error" class="error" for="name"></label>
+		</div>
+		<div class="field">
+			<label>Password</label>
+			<div class="ui samll corner labeled left icon input">
+				<input placeholder="Password" type="password" name="password"
+					required> <i class="icon lock"></i>
+				<div class="ui corner label">
+					<i class="asterisk icon"></i>
+				</div>
+			</div>
+			<label id="password-error" class="error" for="password"></label>
+		</div>
+		<div class="field">
+			<label>Phone-number</label>
+			<div class="ui samll left icon input">
+				<input placeholder="Phone" type="tel" name="phone"> <i
+					class="icon phone"></i>
+			</div>
+			<label id="phone-error" class="error" for="phone"></label>
+		</div>
+		<div class="field middle aligned">
+			<div class="ui buttons">
+				<button class="ui positive button" type="button" id="SignUp">Sign
+					Up</button>
+				<button class="ui button" type="reset">clear</button>
+			</div>
+		</div>
+		</div>
+	</form>
+	<div class="ui mini modal">
+		<i class="close icon"></i>
+		<div class="header modalmsg">E-mail 중복체크</div>
+		<div class="actions">
+			<div class="ui negative button">Close</div>
+			<div class="ui positive right labeled icon button">
+				Yes <i class="checkmark icon"></i>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block layout:fragment="js">
+<script>
+	$('#email-confirm').on('click', function() {
+		const email = $('#email').val();
+		const name = 'iamhch';
+		if (email === "") {
+			$('.modalmsg').text("E-mail을 입력하세요");
+			$('.mini.modal').modal('show');
+			return false;
+		} else
+			$.ajax({
+				type: 'POST',
+				data: { email: email },
+				datatype: 'json',
+				url: 'emailConfirmAjax',
+				success: function(data) {
+					let msg = "";
+					if (data == 'yes') {
+						msg = "사용중인 email입니다.";
+						$('confirmyn').val('n');
+						$('#email').val('');
+						$('#email').focus();
+					} else {
+						msg = "사용가능한 email입니다.";
+						$('confirmyn').val('y');
+					}
+					$('.modalmsg').text(msg);
+					$('.mini.modal').modal('show');
+				},
+				error: function(xhr, status, error) {
+					alert('ajax error:' + xhr.status + error);
+				}
+			});
+	});
+	
+	$('#SignUp').on('click', function() {
+		$("#memberForm").validate();
+		$.extend($.validator.messages, { required: "필수 항목입니다.", remote: "항목을 수정하세요.", email: "유효하지 않은 E-Mail주소입니다.", url: "유효하지 않은 URL입니다.", date: "올바른 날짜를 입력하세요.", dateISO: "올바른 날짜(ISO)를 입력하세요.", number: "유효한 숫자가 아닙니다.", digits: "숫자만 입력 가능합니다.", creditcard: "신용카드 번호가 바르지 않습니다.", equalTo: "같은 값을 다시 입력하세요.", extension: "올바른 확장자가 아닙니다.", maxlength: $.validator.format("{0}자를 넘을 수 없습니다. "), minlength: $.validator.format("{0}자 이상 입력하세요."), rangelength: $.validator.format("문자 길이가 {0} 에서 {1} 사이의 값을 입력하세요."), range: $.validator.format("{0} 에서 {1} 사이의 값을 입력하세요."), max: $.validator.format("{0} 이하의 값을 입력하세요."), min: $.validator.format("{0} 이상의 값을 입력하세요.") });
+		$("#memberForm").submit();
+	});
+	
+</script>
+</th:block>
+
+</html>

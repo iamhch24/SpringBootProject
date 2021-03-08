@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="css">
+<style>
+.field {
+	width: 200px;
+}
+
+select {
+	width: 50px;
+}
+
+.segment {
+	padding: 0 15px;
+}
+</style>
+</th:block>
+
+<div layout:fragment="content" id="content">
+	<h2 class="ui center aligned icon header">
+		<i class="clipboard outline icon"></i> 월별 급여 정산 보기
+	</h2>
+
+	<form class="ui form" method="post" action="salaryRollView" id="salaryRollForm">
+		<input type="hidden" class="confirmyn" value="n">
+
+		<div class="ui horizontal segments">
+			<div class="ui segment">
+				<div class="field">
+ 					<label>처리 년도</label> 
+					<select name="yyyy">
+						<option th:each="year : ${years}" th:selected="${year == thisyear}"  th:value="${year}" th:text="${year+'년'}"></option>
+					</select>
+					<label>처리 월</label> 
+					<select name="mm">
+						<option th:each="month : ${months}" th:selected="${month == thismonth}"  th:value="${month}" th:text="${month+'월'}"></option>
+					</select>
+
+				</div>
+				<div class="field middle aligned">
+					<div class="ui buttons">
+						<button class="ui positive button" type="submit" id="tax_view">보기</button>
+						<button class="ui button" type="reset" onclick="loaction.href='index'">취소</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div class="ui mini modal">
+		<i class="close icon"></i>
+		<div class="header modalmsg">E-mail 중복체크</div>
+		<div class="actions">
+			<div class="ui negative button">Close</div>
+			<div class="ui positive right labeled icon button">
+				Yes <i class="checkmark icon"></i>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block layout:fragment="js">
+</th:block>
+</html>

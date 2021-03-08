@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="css">
+<style>
+.segment{
+	padding: 0 15px;
+}
+label{
+	text-align: left;
+}
+</style>
+</th:block>
+
+<div layout:fragment="content" id="content">
+	<div class="ui middle aligned center aligned grid">
+		<div class="sixteen wide column">
+
+		<h2 class="ui center aligned icon header">
+			<i class="clipboard outline icon"></i> 급여등록
+		</h2>
+
+	<form class="fluid ui form" method="post" action="salary_insertSave" id="salaryForm">
+		<input type="hidden" class="confirmyn" value="n">
+		
+<div class="ui horizontal segments">
+	<div class="ui segment">		
+		<div class="field">
+			<label>EmpNo.</label>
+			<div class="ui action left icon input">
+				<input placeholder="사원" type="text" name="empno" id="empno" required>
+				<i class="icon envelope"></i>
+				<button class="mini ui basic button primary"  type="button" id="empno-confirm">중복검사</button>
+			</div>
+		</div>
+		<div class="field">
+			<label id="empno-error" class="error" for="empno"></label> 
+			<label>Department</label>
+			<select class="ui dropdown" name="depart" style="width:20%">
+				<option value="">부서</option>
+				<option value="기획부">기획부</option>
+				<option value="생산부">생산부</option>
+				<option value="영업부">영업부</option>
+				<option value="총무부">총무부</option>
+			</select>
+		</div>
+		<div class="field">
+			<label>Name</label>
+			<div class="ui small corner labeled left icon input">
+				<input placeholder="사원이름" type="text" name="name" id="name" required>
+				<i class="icon envelope"></i>
+			</div>
+			<label id="name-error" class="error" for="name"></label>
+		</div>
+	</div>
+	<div class="ui segment">	
+		<div class="field">
+			<label>배우자</label> 
+			<select class="ui dropdown" name="partner" style="width:20%">
+				<option value="">배우자유무</option>
+				<option value="0">없음</option>
+				<option value="1">있음</option>
+			</select>
+		</div>
+
+		<div class="field">
+			<label>dependent20</label>
+			<select class="ui dropdown" name="dependent20">
+				<option value="">부양가족(20세이하))</option>
+				<option value="0">0</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+			</select>
+		</div>
+
+		<div class="field">
+			<label>dependent60</label>
+			<select class="ui dropdown" name="dependent60">
+				<option value="">부양가족(60세이상)</option>
+				<option value="0">0</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select>
+		</div>
+		<div class="field">
+			<label>장애여부</label>
+			<select class="ui dropdown" name="disabled">
+				<option value="">장애여부</option>
+				<option value="0">없음</option>
+				<option value="1">있음</option>
+			</select>
+		</div>
+		<div class="field">
+			<label>부녀가장</label>
+			<select class="ui dropdown" name="womanpower">
+				<option value="">부녀가장</option>
+				<option value="0">아닙니다</option>
+				<option value="1">부녀가장</option>
+			</select>
+		</div>
+	</div>
+	<div class="ui segment">	
+		<div class="field">
+			<label>월급여</label>
+			<div class="ui small corner labeled left icon input">
+				<input placeholder="pay" type="number" name="pay"> <i
+					class="icon lock"></i>
+			</div>
+			<label id="pay-error" class="error" for="pay"></label>
+		</div>
+		<div class="field">
+			<label>수당</label>
+			<div class="ui small left icon input">
+				<input placeholder="extra" type="number" name="extra"> <i
+					class="icon phone"></i>
+			</div>
+			<label id="extra-error" class="error" for="extra"></label>
+		</div>
+		<div class="field">
+			<label>yn</label>
+			<select class="ui dropdown" name="yn">
+				<option value="">y/n</option>
+				<option value="y">yes</option>
+				<option value="n">no</option>
+			</select>
+		</div>
+		<div class="field middle aligned">
+			<div class="ui buttons">
+				<button class="ui positive button" type="submit" id="SignUp">Sign Up</button>
+				<button class="ui button" type="reset">clear</button>
+			</div>
+		</div>
+		
+	</div>
+</div>	
+	</form>
+</div>
+</div>
+	<div class="ui mini modal">
+		<i class="close icon"></i>
+		<div class="header modalmsg">E-mail 중복체크</div>
+		<div class="actions">
+			<div class="ui negative button">Close</div>
+			<div class="ui positive right labeled icon button">
+				Yes <i class="checkmark icon"></i>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block layout:fragment="js">
+<script>
+
+		
+	$('#empno-confirm').on('click', function() {
+		const empno = $('#empno').val();
+
+		if (empno === "") {
+			$('.modalmsg').text("사원번호를 입력하세요");
+			$('.mini.modal').modal('show');
+			return false;
+		} else
+			$.ajax({
+				type: 'POST',
+				data: { empno: empno },
+				datatype: 'json',
+				url: 'empnoConfirmAjax',
+				success: function(data) {
+					let msg = "";
+					if (data == 'yes') {
+						msg = "사용중인 사원번호입니다.";
+						$('#empno').val('');
+						$('#empno').focus();
+					} else {
+						msg = "사용가능한 사원번호입니다.";
+					}
+					$('.modalmsg').text(msg);
+					$('.mini.modal').modal('show');
+				},
+				error: function(xhr, status, error) {
+					alert('ajax error:' + xhr.status + error);
+				}
+			});
+	});
+
+
+</script>
+</th:block>
+
+</html>

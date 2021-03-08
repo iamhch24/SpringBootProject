@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="js">
+<script src="https://cdn.tiny.cloud/1/mesfz95lh1x09d0y86fob0stspry4hg7jzw58ei5g6gdv2i4/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+tinymce.init({
+	selector: 'textarea',
+	menubar: false,
+  	plugins: [
+    'advlist autolink lists link image charmap print preview anchor',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table paste code help wordcount'
+  ],
+	toolbar: 'undo redo | formatselect | ' +
+  'bold italic forecolor backcolor | alignleft aligncenter ' +
+  'alignright alignjustify | bullist numlist outdent indent | ' +
+  'formatpainter removeformat | help',
+  	content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+  	width: '100%',
+	branding: false,
+});
+</script>
+</th:block>	
+<div layout:fragment="content" id="content" class="fourteen wide column middle center aligned">
+	<form class="ui form" method="post" action="board_writeSave"
+		enctype="multipart/form-data" style="width:80%; margin:0 auto;">
+		<input type="hidden" class="confirmyn" value="n">
+		<h2 class="ui center aligned icon header">
+			<i class="clipboard outline icon"></i> 게시판
+		</h2>
+		<div class="field">
+			<span class="ui corner labeled left icon input" style="width:45%;margin-right:9.5%">
+				<input placeholder="e-mail" type="email" name="b_email" id="b_email"
+					 readonly data-th-value="${session.sessionemail}">
+				<i class="icon envelope"></i>
+				<label id="email-error" class="error" for="email"></label>
+			</span>
+			<span class="ui corner labeled left icon input" style="width:45%">
+				<input placeholder="Username" type="text" name="b_name" readonly
+					data-th-value="${session.sessionname}">
+				<i class="icon user"></i>
+				<label id="name-error" class="error" for="name"></label>
+			</span>
+		</div>
+		<div class="field">
+			<div class="ui large corner labeled left icon input">
+				<input placeholder="글 제목을 입력해 주세요" type="text" name="b_title" 
+					required> <i class="clipboard list icon"></i>
+			</div>
+			<label id="title-error" class="error" for="name"></label>
+		</div>
+		<div class="field">
+			<div class="ui large action input">
+  				<button class="ui button" id="attachbtn" type="button">File</button>
+				<input type="file" id="b_attach" name="b_attachfile" style="display:none">
+  				<input type="text" placeholder="첨부화일을 선택해 주세요" name="b_attachname" id="b_attachname">
+			</div>		
+		</div>
+		<div class="field">
+			<div class="ui large corner labeled left icon input">
+				<textarea placeholder="글내용을 입력하세요" name="b_content"></textarea>
+			</div>
+		</div>
+		<div class="field middle aligned">
+			<div class="ui buttons">
+				<button class="ui positive button" type="submit" id="submit">등록</button>
+				<button class="ui button" type="reset">취소</button>
+			</div>
+		</div>
+	</form>
+</div>
+</html>

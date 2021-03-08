@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="js">
+<script>
+function gotopage(page){
+	alert(page);
+	let item_find = document.getElementById('find');
+	let find = item_find.value;
+	location.href = `/test?page=${page}&find=${find}`;
+	alert(find);
+}
+</script>
+</th:block>
+<div layout:fragment="content" id="content"
+	class="fourteen wide column middle center aligned">
+	<h2 class="ui center aligned icon header">
+		<i class="clipboard outline icon"></i> 게시판
+	</h2>
+	<div>
+		<table id="boardList" class="ui inverted brown table"
+			style="width: 100%">
+			<thead>
+				<tr>
+					<td>글번호</td>
+					<td>E-mail</td>
+					<td>작성자</td>
+					<td>제목</td>
+					<td>첨부파일</td>
+					<td>조회수</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="board : ${boards}">
+					<td data-th-text="${board.b_seq}"></td>
+					<td data-th-text="${board.b_email}"></td>
+					<td data-th-text="${board.b_name}"></td>
+					<td><a th:href="@{boardDetail(b_seq=${board.b_seq})}">[[${board.b_title}]]</a></td>
+					<td><th:block th:if="${board.b_attach != null}">
+							<a th:href="@{fileDownload(b_attach=${board.b_attach})}"> <i
+								class="clipboard icon"></i>
+							</a>
+						</th:block></td>
+					<td data-th-text="${board.b_hit}"></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<th colspan="6">total counts :: [[${rowcount}]]
+						<div class="ui action input">
+							<input placeholder="검색" type="text" name="find" id="find"
+								data-th-value="${find}">
+							<button class="ui icon button" onclick="findListForm.submit()">
+								<i class="search icon"></i>
+							</button>
+						</div>
+						<div class="ui right floated pagination menu">
+							<a class="icon item"> <i class="left chevron icon"></i>
+							</a>
+							<th:block th:each="page : ${pages}">
+								<a class="item" data-th-text="${page}" data-th-onclick="gotopage([[${page}]])"></a>
+							</th:block>
+							<a class="icon item"> <i class="right chevron icon"></i>
+							</a>
+						</div>
+					</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+</html>

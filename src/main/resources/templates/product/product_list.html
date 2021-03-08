@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+
+<div layout:fragment="content" id="content">
+	<div class="ui ">
+		<div class="ui icon message" id="successmessage" style="display: none">
+			<i class="notched circle loading icon"></i>
+			<div class="content">
+				<div class="msg-header" id="resultmessage">수정되었습니다.</div>
+			</div>
+		</div>
+		<table id="productExample" class="ui celled table" style="width: 100%">
+			<thead>
+				<tr>
+					<th>코드</th>
+					<th>품명</th>
+					<th>규격</th>
+					<th>전년<br>재고</th>
+					<th>구분</th>
+					<th>1월</th>
+					<th>현재<br>재고</th>
+					<th>Option</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="product : ${products}">
+					<td data-th-text="${product.code}" th:onclick="'location.href=\''+@{productUpdate(code=${product.code})}+'\''"  style="cursor:pointer"></td>
+					<td data-th-text="${product.name}"></td>
+					<td data-th-text="${product.capacity}"></td>
+					<td data-th-text="${product.preyystock}"></td>
+					<td>매입<br>매출</td>
+					<td><div data-th-text="${product.buy01}"></div><div data-th-text="${product.sale01}"></div></td>
+					<td data-th-text="${product.stock}"></td>
+					<td><i class="trash outline icon" id="deletebtn"  style="cursor:pointer"></i></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="ui mini modal">
+			<i class="close icon"></i>
+			<div class="header modalmsg">정말 삭제하시겠습니까?</div>
+			<div class="actions">
+				<div class="ui negative button" id="deleteOK">Yes 삭제</div>
+				<div class="ui positive right labeled icon button" id="deleteCancel">
+					No 취소<i class="checkmark icon"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block layout:fragment="js">
+<script>
+$(document).ready( function () {
+	$('#productExample').DataTable({
+		
+	});
+	
+	$(document).on('click', '#productExample td #deletebtn', function() {
+		var row = $(this).closest('tr');
+		var td = row.children();
+		var code = td.eq(0).text();
+	
+		$('.mini.modal').modal('show');
+		$('#deleteOK').on('click', function() {
+			$.ajax({
+				type: 'POST',
+				data: { code: code },
+				datatype: 'json',
+				url: 'productDeleteAjax',
+				success: function(data) {
+					if (data === 'Y') {
+						$('#resultmessage').text("성공적으로 삭제되었습니다.");
+						row.remove();
+					}
+					else { $('#resultmessage').text("삭제되지 않았습니다. 확인이 필요합니다."); }
+
+					$('#successmessage').css('display', "block")
+						.delay(1200).queue(function() {
+							$('#successmessage').css('display', "none").dequeue();
+						});
+
+					$('.mini.modal').modal('hide');
+				},
+				error: function(xhr, status, error) {
+					alert('ajax error:' + xhr.status + error);
+				}
+			});
+		});
+
+		$('#deleteCancel').on('click', function() {
+			$('.mini.modal').modal('hide');
+		});
+	});	
+});
+</script>
+</th:block>
+
+</html>

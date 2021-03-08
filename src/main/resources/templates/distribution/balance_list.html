@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+
+<div layout:fragment="content" id="content">
+	<div class="ui ">
+		<div class="ui icon message" id="successmessage" style="display: none">
+			<i class="notched circle loading icon"></i>
+			<div class="content">
+				<div class="msg-header" id="resultmessage">수정되었습니다.</div>
+			</div>
+		</div>
+		<table id="balanceExample" class="ui celled table" style="width: 100%">
+			<thead>
+				<tr>
+					<th>new yyyy</th>
+					<th>yyyy</th>
+					<th>거래처코드</th>
+					<th>거래처명</th>
+					<th>전년 이월</th>
+					<th>거래 총액</th>
+					<th>결재 총액</th>
+					<th>현재 잔액</th>
+					<th>비고</th>
+				</tr>
+			</thead>
+			<tbody>
+			<th:block th:each="balance : ${balances}">
+				<tr>
+					<td data-th-text="${balance.newyyyy}"></td>
+					<td data-th-text="${balance.yyyy}" th:onclick="'location.href=\''+@{balanceUpdate(yyyy=${balance.yyyy},vendcode=${balance.vendcode})}+'\''"  style="cursor:pointer"></td>
+					<td data-th-text="${balance.vendcode}"></td>
+					<td data-th-text="${balance.vendname}"></td>
+					<td data-th-text="${balance.preyybalance}"></td>
+					<td data-th-text="${balance.dealtot}"></td>
+					<td data-th-text="${balance.paytot}"></td>
+					<td data-th-text="${balance.balance}"></td>
+					<td><i class="trash outline icon" id="deletebtn"  style="cursor:pointer"></i></td>
+				</tr>
+			</th:block>
+			</tbody>
+		</table>
+		<div class="ui mini modal">
+			<i class="close icon"></i>
+			<div class="header modalmsg">정말 삭제하시겠습니까?</div>
+			<div class="actions">
+				<div class="ui negative button" id="deleteOK">Yes 삭제</div>
+				<div class="ui positive right labeled icon button" id="deleteCancel">
+					No 취소<i class="checkmark icon"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block layout:fragment="js">
+<script>
+
+	$('#balanceExample').DataTable({
+		deferRender: true,
+		scrollY: 400,
+		scrollCollapse: true,
+		scroller: true
+	});
+	
+	
+	$(document).on('click', '#balanceExample td #deletebtn', function() {
+		var row = $(this).closest('tr');
+		var td = row.children();
+		var code = td.eq(0).text();
+	
+		$('.mini.modal').modal('show');
+		$('#deleteOK').on('click', function() {
+			$.ajax({
+				type: 'POST',
+				data: { code: code },
+				datatype: 'json',
+				url: 'balanceDeleteAjax',
+				success: function(data) {
+					if (data === 'Y') {
+						$('#resultmessage').text("성공적으로 삭제되었습니다.");
+						row.remove();
+					}
+					else { $('#resultmessage').text("삭제되지 않았습니다. 확인이 필요합니다."); }
+
+					$('#successmessage').css('display', "block")
+						.delay(1200).queue(function() {
+							$('#successmessage').css('display', "none").dequeue();
+						});
+
+					$('.mini.modal').modal('hide');
+				},
+				error: function(xhr, status, error) {
+					alert('ajax error:' + xhr.status + error);
+				}
+			});
+		});
+
+		$('#deleteCancel').on('click', function() {
+			$('.mini.modal').modal('hide');
+		});
+	});	
+
+</script>
+</th:block>
+
+</html>

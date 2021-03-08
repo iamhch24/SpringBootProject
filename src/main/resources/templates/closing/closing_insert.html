@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="css">
+	<style>
+label {
+	text-align: left;
+}
+
+.segment {
+	padding: 0 15px;
+}
+</style>
+</th:block>
+
+<div layout:fragment="content" id="content">
+	<form class="ui form" method="post" action="closing_insertSave"
+		id="closingForm">
+		<div class="ui middle aligned center aligned grid centered">
+			<div class="eight wide column center aligned">
+				<h2 class="ui center aligned header ">
+					<div style="color: #28a745"><i class="clipboard outline icon"></i> 마감 처리</div>
+				</h2>
+				<div class="ui raised segment">
+					<div class="ui top attached label">마감기준</div>
+					<div class="three fields">
+						<div class="eight wide field">
+							<label>년도</label> <select class="ui compact dropdown" name="yyyy">
+								<option th:each="yyyy : ${yyyys}"
+									th:selected="${yyyy == thisyyyy}" th:value="${yyyy}"
+									th:text="${yyyy}"></option>
+							</select>
+						</div>
+						<div class="four wide field">
+							<label>월</label> <select class="ui compact dropdown" name="mm">
+								<option th:each="mm : ${mms}" th:selected="${mm == thismm}"
+									th:value="${mm}" th:text="${mm}"></option>
+							</select>
+						</div>
+						<div class="four wide field">
+							<label>일</label> <select class="ui compact dropdown" name="dd">
+								<option th:each="dd : ${dds}" th:selected="${dd == thisdd}"
+									th:value="${dd}" th:text="${dd}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="three fields">
+					<div class="six wide field">
+						<div class="ui buttons fluid">
+							<button class="ui button" type="button" id="yyyyCal">
+								<i class="calculator icon"></i>년말 결산
+							</button>
+						</div>
+					</div>
+					<div class="five wide field">
+						<div class="ui buttons fluid">
+							<button class="ui button" type="button" id="mmCal">
+								<i class="calculator icon"></i>월말 결산
+							</button>
+						</div>
+					</div>
+					<div class="five wide field">
+						<div class="ui buttons fluid">
+							<button class="ui button" type="button" id="ddCal">
+								<i class="calculator icon"></i>일일 결산
+							</button>
+						</div>
+					</div>					
+				</div>
+
+			</div>
+		</div>
+	</form>
+
+	<div class="ui mini modal">
+		<i class="close icon"></i>
+		<div class="header modalmsg">E-mail 중복체크</div>
+		<div class="actions">
+			<div class="ui negative button" id="cancelBtn">취소</div>
+			<div class="ui positive right labeled icon button" id="doBtn">
+				실행<i class="checkmark icon"></i>
+			</div>
+		</div>
+	</div>
+</div>
+
+<th:block layout:fragment="js">
+<script>
+$('#yyyyCal').on('click',function(){
+
+	$('.header.modalmsg').html("<span style='color:red'>년말결산입니다.</span><br><span style='color:red'>실행 클릭시</span> 데이터는 복구되지 않습니다.");
+	$('.mini.modal').modal('show');
+	$('#doBtn').on('click',function(){
+		$('#closingForm').attr('action','yyyyClosing');
+		$('#closingForm').submit();
+	});
+});
+
+$('#mmCal').on('click',function(){
+
+	$('.header.modalmsg').html("<span style='color:blue'>월말결산입니다.</span><br><span style='color:blue'>실행 클릭시</span> 데이터는 복구되지 않습니다.");
+	$('.mini.modal').modal('show');
+	$('#doBtn').on('click',function(){
+		$('#closingForm').attr('action','mmClosing');
+		$('#closingForm').submit();
+	});
+
+});
+
+$('#ddCal').on('click',function(){
+	$('.header.modalmsg').html("<span style='color:green'>일일결산입니다.</span><br><span style='color:green'>실행 클릭시</span> 데이터는 복구되지 않습니다.");
+	$('.mini.modal').modal('show');
+	$('#doBtn').on('click',function(){
+		$('#closingForm').attr('action','ddClosing');
+		$('#closingForm').submit();
+	});
+
+});
+</script>
+
+</th:block>
+</html>

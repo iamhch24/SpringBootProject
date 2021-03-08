@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="css">
+<style>
+.wrapper{
+	width: 80%;
+}
+</style>
+</th:block>
+
+<div layout:fragment="content" id="content">
+	<form class="ui form" method="post" action="product_updateSave" id="productForm">
+		<div class="wrapper" >
+			<h2 class="ui center aligned icon header">
+			<i class="clipboard outline icon"></i> 
+			상품 정보 수정
+			</h2>		
+			<div class="field">
+				<label>상품코드</label>
+				<div class="ui action left icon input">
+					<input type="text" name="code" id="code" data-th-value="${product.code}" readonly> <i class="icon user"></i>
+				</div>
+			</div>
+			<div class="two fields">
+				<div class="field">
+					<label>상품명</label>
+					<div class="ui left icon input">
+						<input type="text" name="name" data-th-value="${product.name}"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>상품규격</label>
+					<div class="ui left icon input">
+						<input type="text" name="capacity" data-th-value="${product.capacity}"> <i class="icon user"></i>
+					</div>
+				</div>
+			</div>
+			<div class="field">
+				<label>상품설명</label>
+				<div class="ui left icon input">
+					<input type="text" name="explanation" data-th-value="${product.explanation}"> <i class="icon user"></i>
+				</div>
+			</div>
+			<div class="two fields">
+				<div class="field">
+					<label>매입단가</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="buyprice" data-th-value="${product.buyprice}"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>매출단가</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="saleprice" data-th-value="${product.saleprice}"> <i class="icon user"></i>
+					</div>
+				</div>
+			</div>
+			<div class="three fields">
+				<div class="field">
+					<label>전년재고</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="preyystock" data-th-value="${product.preyystock}"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>전월재고</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="premmstock" data-th-value="${product.premmstock}"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>전일재고</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="preddstock" data-th-value="${product.preddstock}"> <i class="icon user"></i>
+					</div>
+				</div>
+			</div>
+			<div class="field">
+				<label>현재 재고</label>
+				<div class="ui left icon input">
+					<input type="number" value="0" name="stock" data-th-value="${product.stock}"> <i class="icon user"></i>
+				</div>
+			</div>
+			
+			<div class="ui horizontal segments">
+				<div class="ui segment">		
+					<div class="two fields">
+						<div class="field">
+							<label>1월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy01" data-th-value="${product.buy01}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>1월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale01" data-th-value="${product.sale01}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>				
+					<div class="two fields">
+						<div class="field">
+							<label>2월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy02" data-th-value="${product.buy02}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>2월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale02" data-th-value="${product.sale02}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>3월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy03" data-th-value="${product.buy03}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>3월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale03" data-th-value="${product.sale03}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>4월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy04" data-th-value="${product.buy04}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>4월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale04" data-th-value="${product.sale04}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>5월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy05" data-th-value="${product.buy05}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>5월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale05" data-th-value="${product.sale05}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>6월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy06" data-th-value="${product.buy06}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>6월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale06" data-th-value="${product.sale06}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ui segment">
+					<div class="two fields">
+						<div class="field">
+							<label>7월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy07" data-th-value="${product.buy07}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>7월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale07" data-th-value="${product.sale07}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>				
+					<div class="two fields">
+						<div class="field">
+							<label>8월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy08" data-th-value="${product.buy08}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>8월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale08" data-th-value="${product.sale08}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>9월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy09" data-th-value="${product.buy09}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>9월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale09" data-th-value="${product.sale09}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>10월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy10" data-th-value="${product.buy10}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>10월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale10" data-th-value="${product.sale10}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>11월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy11" data-th-value="${product.buy11}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>11월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale11" data-th-value="${product.sale11}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>12월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy12" data-th-value="${product.buy12}"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>12월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale12"  data-th-value="${product.sale12}"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>		
+			<div class="two fields">
+				<div class="field">
+					<div class="ui buttons fluid">
+						<button class="ui positive button" type="submit" id="SignUp">Sign Up</button>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui buttons fluid">
+						<button class="ui button" type="reset">clear</button>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</form>
+</div>
+
+
+<th:block layout:fragment="js">
+<script>
+
+
+
+</script>
+</th:block>
+
+</html>

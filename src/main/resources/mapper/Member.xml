@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.naver.iamhch24.dao.MemberDao">
+		
+	<select id="selectOne" parameterType="String" resultType="com.naver.iamhch24.entities.Member">
+		select * from member where email=#{email}
+	</select>	
+
+	<select id="countAll" resultType="int">
+		select count(*) from member
+	</select>
+	
+	<insert id="insertRow" parameterType="hashMap">
+		insert into member (email, name, password, phone, photo)
+		values(#{email}, #{name}, #{password}, #{phone}, #{photo})
+	</insert>
+	
+	<update id="updateRow" parameterType="hashMap">
+		update member set name=#{name}, password=#{password}, phone=#{phone}, photo=#{photo} 
+		where email = #{email} 
+	</update>
+	
+	<update id="updateAjax">
+		update member set memlevel = #{memlevel} 
+		where email = #{email} 
+	</update>
+
+	<delete id="deleteAjax">
+		delete from member 
+		where email = #{email} 
+	</delete>
+	
+	<select id="selectAll" resultType="com.naver.iamhch24.entities.Member">
+		select * from member;
+	</select>
+
+</mapper>

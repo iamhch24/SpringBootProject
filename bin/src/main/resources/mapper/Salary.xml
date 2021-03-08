@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.naver.iamhch24.dao.SalaryDao">
+
+	<select id="countAll" resultType="Integer">
+		select count(*) from salary
+	</select>
+
+	<select id="selectAll" resultType="com.naver.iamhch24.entities.Salary">
+		select * from salary
+	</select>
+
+	<select id="selectTaxYes" resultType="com.naver.iamhch24.entities.Salary">
+		select * from salary where yn='y'
+	</select>
+
+	<select id="selectOne" resultType="com.naver.iamhch24.entities.Salary">
+		select * from salary where empno=#{empno}
+	</select>
+	
+	<insert id="insertRow">
+		insert into salary(empno, depart, name, partner, dependent20, dependent60, disabled, womanpower, pay, extra, yn )
+		values(	#{empno}, #{depart}, #{name}, #{partner}, #{dependent20}, #{dependent60}, #{disabled}, #{womanpower}, #{pay}, #{extra}, #{yn} )
+	</insert>
+	
+	<update id="updateRow">
+		update salary set depart=#{depart}, name=#{name}, partner=#{partner}, dependent20=#{dependent20}, dependent60=#{dependent60}, 
+		disabled=#{disabled}, womanpower=#{womanpower}, pay=#{pay}, extra=#{extra}, yn=#{yn}
+		where empno = #{empno}
+	</update>
+	
+	<delete id="deleteRow">
+		delete from salary where empno = #{empno}
+	</delete>
+	
+	<update id="updateAjax">
+		update salary set yn=#{yn}
+		where empno = #{empno}
+	</update>
+
+	<delete id="deleteAjax">
+		delete from salary 
+		where empno = #{empno} 
+	</delete>
+	
+	<select id="selectSalaryRollView" resultType="com.naver.iamhch24.entities.SalaryRollViewToBean">
+		select yyyy, mm, empno, depart, name,sum(partner) as partner, sum(dependent20) as dependent20,sum(dependent60) as dependent60,sum(disabled) as disabled, sum(pay12) as mmpay, sum(annuityinsurance) as insurance, sum(simpletax) as tax, sum(finalpay) as lastamount from salaryroll
+		where yyyy=#{yyyy} and mm=#{mm}
+		group by depart, name WITH ROLLUP 
+	</select>
+	
+	<insert id="insertSalaryRoll">
+		insert into salaryroll(yyyy, mm, empno, depart, name, partner, dependent20, dependent60, 
+		disabled, womanpower, pay12, sumpay, incomededuction, incomeamount, personaldeduction, 
+		annuityinsurance, specialdeduction, standardamount, calculatedtax, incometaxdeduction, 
+		decidedtax, simpletax, finalpay)
+		values (#{yyyy}, #{mm}, #{empno}, #{depart}, #{name}, #{partner}, #{dependent20}, 
+		#{dependent60},#{disabled}, #{womanpower}, #{pay12}, #{sumpay}, #{incomededuction}, 
+		#{incomeamount},#{personaldeduction}, #{annuityinsurance}, #{specialdeduction}, 
+		#{standardamount},#{calculatedtax}, #{incometaxdeduction}, #{decidedtax}, #{simpletax}, #{finalpay})
+	</insert>
+	
+	<delete id="deleteSalaryRollbefore">
+		delete from salaryroll where yyyy=#{yyyy} and mm=#{mm} 
+	</delete>
+	
+	<select id="selectSalaryRollUp">
+		select * from salaryroll 
+		where yyyy = #{yyyy} and mm=#{mm}		
+		
+	</select>
+
+</mapper>

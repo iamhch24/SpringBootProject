@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="css">
+<style>
+.wrapper{
+	margin: 0 auto;
+	width: 60%;
+
+}
+</style>
+</th:block>
+	
+<div layout:fragment="content" id="content">
+	<form class="ui form " method="post" action="member_insertSave" id="memberForm">
+		<table id="datatableExample">
+		<thead>
+		</thead>
+		<tbody>
+		</tbody>
+		<tfoot>
+		</tfoot>
+		</table>
+	</form>
+</div>
+<th:block layout:fragment="js">
+<script>
+	$('#datatableExample').DataTable({
+		
+	});
+</script>
+</th:block>
+
+</html>

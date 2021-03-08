@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.naver.iamhch24.dao.ProductDao">
+		
+	<select id="selectOne" parameterType="String" resultType="com.naver.iamhch24.entities.Product">
+		select * from product where code=#{code}
+	</select>	
+
+	<select id="countAll" resultType="int">
+		select count(*) from product
+	</select>
+	
+	<insert id="insertRow" parameterType="hashMap">
+		insert into product(code, name, capacity, buyprice, saleprice, preyystock, premmstock, preddstock,
+			buy01, buy02, buy03, buy04, buy05, buy06, buy07, buy08, buy09, buy10, buy11, buy12,
+			sale01, sale02, sale03, sale04, sale05, sale06, sale07, sale08, sale09, sale10, sale11, sale12,
+			stock, explanation)
+		values(	 
+			#{code},#{name},#{capacity},#{buyprice},#{saleprice},#{preyystock},#{premmstock},#{preddstock},
+			#{buy01},#{buy02},#{buy03},#{buy04},#{buy05},#{buy06},#{buy07},#{buy08},#{buy09},#{buy10},#{buy11},#{buy12},
+			#{sale01},#{sale02},#{sale03},#{sale04},#{sale05},#{sale06},#{sale07},#{sale08},#{sale09},#{sale10},#{sale11},#{sale12},
+			#{stock},#{explanation} )
+	</insert>
+	
+	<update id="updateRow" parameterType="hashMap">
+		update product set name=#{name}, capacity=#{capacity},buyprice=#{buyprice},saleprice=#{saleprice},
+			preyystock=#{preyystock},premmstock=#{premmstock},preddstock=#{preddstock},
+			buy01=#{buy01},buy02=#{buy02},buy03=#{buy03},buy04=#{buy04},buy05=#{buy05},buy06=#{buy06},
+			buy07=#{buy07},buy08=#{buy08},buy09=#{buy09},buy10=#{buy10},buy11=#{buy11},buy12=#{buy12},
+			sale01=#{sale01},sale02=#{sale02},sale03=#{sale03},sale04=#{sale04},sale05=#{sale05},sale06=#{sale06},
+			sale07=#{sale07},sale08=#{sale08},sale09=#{sale09},sale10=#{sale10},sale11=#{sale11},sale12=#{sale12},
+			stock=#{stock},explanation=#{explanation}
+		where code = #{code} 
+	</update>
+	
+	<update id="buyProductAdd" >
+		update product set stock = stock + #{qty}, ${columnname} = ${columnname} + #{qty} where code = #{procode} 
+	</update>
+	
+	<update id="buyProductSub">
+		update product set stock = stock - #{beforeqty},
+		${columnname} = ${columnname} - #{beforeqty}
+		where code = #{beforeprocode};
+	</update>
+	
+	
+	<update id="buyProductAddJson">
+		update product set stock=stock + #{qty}, 
+		${columnname}=${columnname} + #{qty}
+		where code = #{procode} 
+	</update>
+	
+	
+	<update id="updateAjax">
+		update product set memlevel = #{memlevel} 
+		where code = #{code} 
+	</update>
+
+	<delete id="deleteAjax">
+		delete from product 
+		where code = #{code} 
+	</delete>
+	
+	<select id="selectAll" resultType="com.naver.iamhch24.entities.Product">
+		select * from product;
+	</select>
+	
+	<update id="ddProductClosing">
+		update product set preddstock=stock  
+	</update>
+
+	<update id="mmProductClosing">
+		update product set premmstock=stock, preddstock=stock  
+	</update>
+
+	<update id="yyProductClosing">
+		update product set preyystock=stock, premmstock=stock, preddstock=stock
+	</update>
+
+
+</mapper>

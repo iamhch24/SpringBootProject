@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<div layout:fragment="content" id="content">
+	<form class="ui form" method="post" action="member_updateSave" enctype="multipart/form-data">
+		<div class="ui grid center aligned photo">
+			<a href="#"><img data-th-src="${row.photo}" id="viewphoto" title="클릭하면 이미지 변경" /></a>
+		</div>
+		<div class="ui grid center aligned ">
+			<input type="hidden" name="oldphoto" data-th-value="${row.photo}"> 
+			<input type="file" id="imgfile" name="imgfile" style="display: none">
+		</div>
+		<div class="field">
+			<label>E-mail</label>
+			<div class="ui samll corner labeled left icon input">
+				<input placeholder="e-mail" type="email" name="email" id="email"
+					data-th-value="${row.email}" readonly required> 
+					<i class="icon envelope"></i>
+				<div class="ui corner label">
+					<i class="asterisk icon"></i>
+				</div>
+			</div>
+		</div>
+		<div class="field">
+			<label>Username</label>
+			<div class="ui samll corner labeled left icon input">
+				<input placeholder="Username" type="text" name="name"
+					data-th-value="${row.name}" required> <i class="icon user"></i>
+				<div class="ui corner label">
+					<i class="asterisk icon"></i>
+				</div>
+			</div>
+		</div>
+		<div class="field">
+			<label>Password</label>
+			<div class="ui samll corner labeled left icon input">
+				<input placeholder="Password" type="password" name="password"
+					data-th-value="${row.password}" required> <i class="icon lock"></i>
+				<div class="ui corner label">
+					<i class="asterisk icon"></i>
+				</div>
+				<input type="hidden" name="oldpassword" data-th-value="${row.password}">
+			</div>
+		</div>
+		<div class="field">
+			<label>Phone-number</label>
+			<div class="ui samll left icon input">
+				<input placeholder="Phone" type="tel" name="phone" data-th-value="${row.phone}"> 
+				<i class="icon phone"></i>
+			</div>
+		</div>
+		<div class="field middle aligned">
+			<div class="ui buttons">
+				<button class="ui positive button" type="submit">Save</button>
+			</div>
+		</div>
+	</form>
+</div>
+<th:block layout:fragment="js">
+<script>
+
+	$('#viewphoto').on('click', function() {
+		$('input[type=file]').click();
+		return false;
+	});
+
+	$('#imgfile').on('change', function(event) {
+		const imgpath = URL.createObjectURL(event.target.files[0]);
+		$('#viewphoto').attr('src', imgpath);
+		return false;
+	});
+
+</script>
+</th:block>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout-twosides">
+<th:block layout:fragment="css">
+<style>
+label{
+	text-align: left;
+}
+.sum{
+	font-weight: 600;
+}
+
+</style>
+</th:block>
+
+<div layout:fragment="left" id="left">
+ 	<form class="ui form" method="post" action="buy_insertSave" id="buyForm">
+		<div class="ui middle aligned center aligned grid">
+			<div class="twelve wide column">
+			<h2 class="ui center aligned icon header">
+			<i class="clipboard outline icon"></i> 
+			거래명세서 등록
+			</h2>
+				<input type="hidden" name="seq" id="seq" th:value="${buy.seq}">
+				<input type="hidden" name="beforeprocode" id="beforeprocode" th:value="${buy.beforeprocode}">
+				<input type="hidden" name="beforeprice" id="beforeprice" th:value="${buy.beforeprice}">
+				<input type="hidden" name="beforeqty" id="beforeqty" th:value="${buy.beforeqty}">
+				<input type="hidden" name="beforetotal" id="beforetotal" th:value="${buy.beforetotal}">		
+				<input type="hidden" name="selectedrow" id="selectedrow">
+			<div class="field">
+				<label>거래처</label>
+				<select class="ui " name="vendcode" id="selectvender" >
+					<option th:each="vender : ${venders}" th:value="${vender.code}" th:text="${vender.name}" th:selected="${vender.code == buy.vendcode}"></option>
+				</select>
+				<input type="hidden" name="vendname" id="vendname" th:value="${buy.vendname}">
+			</div>
+			<div class="ui raised segment">
+ 				<div class="ui top attached label">매입번호</div>
+ 				<div class="fields">				
+					<div class="field"><input type="text" name="yyyy" th:value="${buy.yyyy}" id="yyyy" readonly></div>
+					<div class="field"><input type="text" name="mm" th:value="${buy.mm}" id="mm" readonly></div>
+					<div class="field"><input type="text" name="dd" th:value="${buy.dd}" id="dd" readonly></div>
+					<div class="field"><input type="text" name="no" th:value="${buy.no}" id="no" readonly></div>
+					<div class="field"><input type="text" name="hang" th:value="${buy.hang}" id="hang" readonly></div>
+				</div>
+			</div>
+			<div class="field">
+				<label>상품</label>
+ 				<select class="ui " name="procode" id="selectproduct">
+					<option th:each="product : ${products}" th:value="${product.code}" th:text="${product.name}" data-pro-code="${product.code}" th:selected="${product.code==buy.procode}"></option>
+				</select> 
+				<input type="hidden" name="proname" id="proname" th:value="${buy.proname}">
+				
+			</div>
+			<div class="field">
+				<label>단가</label>
+				<div class="ui left icon input">
+					<input type="number" name="price" id="price" th:value="${buy.price}"> <i class="icon user"></i>
+				</div>
+			</div>
+			<div class="field">
+				<label>수량</label>
+				<div class="ui left icon input">
+					<input type="number" name="qty" value="0"  id="qty"  th:value="${buy.qty}"> <i class="icon user"></i>
+				</div>
+			</div>
+			<div class="field">
+				<label>합계</label>
+				<div class="ui left icon input">
+					<input type="number" value="0" name="total" id="total" th:value="${buy.total}"> <i class="icon user"></i>
+				</div>
+			</div>
+			<div class="field">
+				<label>비고</label>
+				<div class="ui left icon input">
+					<input type="text" name="memo" id="memo" th:value="${buy.memo}"> <i class="icon user"></i>
+				</div>
+			</div>
+			<div class="five fields">
+				<div class="five wide field">
+					<div class="ui buttons fluid">
+						<button class="ui button" type="button" id="newBtn" onclick="location.href='buyInsert'">New</button>
+					</div>
+				</div>
+				<div class="two wide field">
+				</div>
+				<div class="five wide field">
+					<div class="ui buttons fluid">
+						<button class="ui positive button" type="button" id="signUpBtn" style="display:block">Sign Up</button>
+						<button class="ui positive button" type="button" id="updateBtn" style="display:none">Update</button>
+					</div>
+				</div>
+				<div class="four wide field">
+					<div class="ui buttons fluid">
+						<button class="ui button" type="button" id="deleteBtn">
+						<i class="trash alternate icon"></i>Delete</button>
+					</div>
+				</div>
+				<div class="four wide field">
+					<div class="ui buttons fluid">
+						<button class="ui button" type="reset">clear</button>
+					</div>
+				</div>
+			</div>	
+			<div class="ui icon message" id="successmessage" style="display: none">
+				<i class="notched circle loading icon"></i>
+				<div class="content">
+					<div class="msg-header" id="resultmessage">수정되었습니다.</div>
+				</div>
+			</div>
+			
+			</div>
+		</div>
+	</form> 
+	<div class="ui mini modal buymodal">
+		<i class="close icon"></i>
+		<div class="header modalmsg">정말 삭제하시겠습니까?</div>
+		<div class="actions">
+			<div class="ui negative button" >Yes 삭제</div>
+			<div class="ui positive right labeled icon button">
+				No 취소<i class="checkmark icon"></i>
+			</div>
+		</div>
+	</div>
+	<div class="ui mini modal buyDeletemodal">
+		<i class="close icon"></i>
+		<div class="header modalmsg">정말 삭제하시겠습니까?</div>
+		<div class="actions">
+			<div class="ui negative button" id="deleteOK">Yes 삭제</div>
+			<div class="ui positive right labeled icon button" id="deleteCancel">
+				No 취소<i class="checkmark icon"></i>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+<div layout:fragment="right" id="right">
+	<form class="fluid ui form" action="buyFind" method="post" name="buyfindForm" id="buyfindForm">
+		<input type="hidden" name="s_vendname" id="s_vendname">
+		
+		<div class="ui raised segment">
+			<div class="ui top attached label middle align">거래명세서 리스트</div>
+			<div class="six fields">
+				<div class="five wide field"><label>거래처</label><input type="text" name="t_vendname" th:value="${buy.vendname}" id="t_vendname" readonly></div>
+				<div class="three wide field"><label>매입번호</label><input type="text" name="t_yyyy" th:value="${buy.yyyy}" id="t_yyyy" readonly></div>
+				<div class="two wide field"><label>&nbsp</label><input type="text" name="t_mm" th:value="${buy.mm}" id="t_mm" readonly></div>
+				<div class="two wide field"><label>&nbsp</label><input type="text" name="t_dd" th:value="${buy.dd}" id="t_dd" readonly></div>
+				<div class="two wide field"><label>&nbsp</label><input type="text" name="t_no" th:value="${buy.no}" id="t_no" readonly></div>
+				<div class="two wide field"><label>&nbsp</label><input type="text" name="t_hang" th:value="${buy.hang}" id="t_hang" readonly></div>
+			</div>
+		</div>
+		<table id="buyfindtable" class="ui single line table" style="width: 100%">
+			<thead>
+				<tr class="center aligned ui active">
+					<th style="width:8%">no</th>
+					<th style="width:12%">항번</th>
+					<th style="width:25%">품명</th>
+					<th style="width:10%">단가</th>
+					<th style="width:10%">수량</th>
+					<th style="width:25%">금액</th>
+					<th style="width:10%">option</th>
+				</tr>
+			</thead>
+			<tbody>
+ 				<tr th:each="buyrollup : ${buyrollups}" th:class="${buyrollup.hang != null  && buyrollup.hang != 0} ? 'center aligned' : ( ${buyrollup.no != null  && buyrollup.no != 0} ? 'sum center aligned' : 'ui active sum center aligned' ) ">
+					<td style="display:none" data-th-text="${buyrollup.hang != null  && buyrollup.hang != 0} ? ${buyrollup.seq} : ' ' "></td>
+					<td data-th-text="${buyrollup.no != null && buyrollup.no != 0 && buyrollup.hang != null  && buyrollup.hang != 0} ? ${buyrollup.no} : ' ' "></td> 				
+					<td data-th-text="${buyrollup.hang != null  && buyrollup.hang != 0} ? ${buyrollup.hang} : ' ' "></td> 				
+					<td data-th-text="${buyrollup.hang != null  && buyrollup.hang != 0} ? ${buyrollup.proname} : ' ' " id="buyitemrow" style="cursor:pointer" ></td>
+					<td data-th-text="${buyrollup.hang != null  && buyrollup.hang != 0} ? ${buyrollup.price} : ( ${buyrollup.no != null  && buyrollup.no != 0} ? '소계' : '총계' ) "></td>
+					<td data-th-text="${buyrollup.qty}"></td>
+					<td data-th-text="${buyrollup.total}"></td>
+					<td>
+ 					<i class="trash outline icon" id="deletebtn"  style="cursor:pointer"></i> 
+					</td>
+				</tr>
+ 			</tbody>
+		</table>
+		<div class="fluid five fields">
+			<div class="six wide field">
+				<select class="ui compact dropdown" name="s_vendcode" id="s_vender" >
+					<option th:each="vender : ${venders}" th:value="${vender.code}" th:text="${vender.name}" th:selected="${vender.code == buy.vendcode}"></option>
+				</select>	
+			</div>
+			<div class="three wide field">
+				<select class="ui compact dropdown" name="s_yyyy">
+					<option th:each="yyyy : ${yyyys}" th:selected="${yyyy == thisyyyy}"  th:value="${yyyy}" th:text="${yyyy}"></option>
+				</select>
+			</div>
+			<div class="two wide field">
+				<select class="ui compact dropdown" name="s_mm">
+					<option th:each="mm : ${mms}" th:selected="${mm == thismm}"  th:value="${mm}" th:text="${mm}"></option>
+				</select>			
+			</div>
+			<div class="two wide field">
+				<select class="ui compact dropdown" name="s_dd">
+					<option th:each="dd : ${dds}" th:selected="${dd == thisdd}"  th:value="${dd}" th:text="${dd}"></option>
+				</select>	
+			</div>
+			<div class="three wide field">
+				<button type="button" class="ui blue button" id="findbtnclick">검색</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+
+<th:block layout:fragment="js">
+<script>
+$('#selectproduct').on('change',function(){
+	var code = $('#selectproduct').val();
+	var proname = $('#selectproduct option:selected').text();
+	$('#proname').val(proname);
+
+	$.ajax({
+		type: 'POST',
+		data: { code:code },
+		datatype: 'json',
+		url: 'productSelectedAjax',
+		contentType: 'application/x-www-form-urlencoded; charset=euc-kr',
+		success: function(data) {
+			$('#proname').val(data.name);
+			$('#price').val(data.buyprice);
+			$('#qty').focus();
+		},
+		error: function(xhr, status, error) {
+			alert('ajax error:' + xhr.status + error);
+		}
+	});
+	
+});
+
+$('#selectvender').on('change',function(){
+	var vendcode = $('#selectvender').val();
+	var vendname = $('#selectvender option:selected').text();
+	$('#vendname').val(vendname);
+	$('#t_vendname').val(vendname);
+	
+	$.ajax({
+		type: 'POST',
+		data: { vendcode:vendcode },
+		datatype: 'json',
+		url: 'buyNew',
+		contentType: 'application/x-www-form-urlencoded; charset=euc-kr',
+		success: function(data) {
+			$('#yyyy').val(data.yyyy);
+			$('#mm').val(data.mm);
+			$('#dd').val(data.dd);
+			$('#no').val(data.no);
+			$('#hang').val(data.hang);
+			
+		},
+		error: function(xhr, status, error) {
+			alert('ajax error:' + xhr.status + error);
+		}
+	});
+	
+});
+
+$('#qty').on('input',function(){
+	var price=$('#price').val();
+	var qty = $(this).val();
+	total = price * qty;
+	$('#total').val(total);
+});
+
+$('#signUpBtn').on('click',function(){
+	var vendcode = $('#selectvender').val();
+	var procode = $('#selectproduct').val();
+
+	if (vendcode == '0000') {
+		$('.header.modalmsg').text('거래처를 확인해 주세요');
+		$('.mini.modal.buymodal').modal('show');
+		return false;
+	}
+	
+	if (procode == '0000') {
+		$('.header.modalmsg').text('상품을 확인해 주세요');
+		$('.mini.modal.buymodal').modal('show');
+		return false;
+	}
+	$('#buyForm').attr('action','buy_insertSave');
+	$('#buyForm').submit();
+});
+
+$('#findbtnclick').on('click',function(){
+	var vendcode = $('#s_vender').val();
+	var vendname = $('#s_vender option:selected').text();
+
+	$('#s_vendname').val(vendname);
+
+	
+	if (vendcode == '0000') {
+		$('.header.modalmsg').text('거래처를 선택해 주세요');
+		$('.mini.modal.buymodal').modal('show');
+		return;
+	}
+	
+	$('#buyfindForm').submit();
+	
+});
+
+var publicselectedrow;
+
+$('#buyfindtable').on('click','#buyitemrow','td',function(){
+	var row = $(this).closest('tr');
+	var td = row.children();
+	var seq = td.eq(0).text();
+	
+	$('#selectedrow').val(row);
+	publicselectedrow = row;
+	$('#signUpBtn').attr('style','display:none');
+	$('#updateBtn').attr('style','display:block');
+	
+	$.ajax({
+		type: 'POST',
+		data: { seq:seq },
+		datatype: 'json',
+		url: 'buyRowItemSelectedAjax',
+		contentType: 'application/x-www-form-urlencoded; charset=euc-kr',
+		success: function(buy) {
+			$('#seq').val(buy.seq);
+			document.querySelector(`#selectvender option[value='${ buy.vendcode }']`).selected=true;
+			$('#vendname').val(buy.vendname);
+			$('#yyyy').val(buy.yyyy);
+			$('#dd').val(buy.dd);
+			$('#mm').val(buy.mm);
+			$('#no').val(buy.no);
+			$('#hang').val(buy.hang);	
+			$('#selectproduct').val(buy.procode).attr('selected','selected');
+			$('#proname').val(buy.proname);
+			$('#price').val(buy.price);
+			$('#qty').val(buy.qty);
+			$('#total').val(buy.total);v
+			$('#memo').val(buy.memo);
+			$('#buyForm').attr('action','buy_updateSave');
+			$('#beforeprocode').val(buy.procode);
+			$('#beforeprice').val(buy.price);
+			$('#beforeqty').val(buy.qty);
+			$('#beforetotal').val(buy.total);
+		},
+		error: function(xhr, status, error) {
+			alert('ajax error:' + xhr.status + error);
+		}
+	});
+	
+});
+
+/**
+$('#updateBtn').on('click',function(){
+	$('#buyForm').attr('action','buy_updateSave');
+	$('#buyForm').submit();
+});
+
+
+*/
+
+
+
+
+$('#updateBtn').on('click',function(){
+    var vendcode = $('#selectvender').val();
+	var vendname = $('#selectvender option:selected').text();
+    var beforeprocode = $('#beforeprocode').val();
+    var procode = $('#selectproduct').val();
+    var yyyy = $('#yyyy').val();
+    var mm = $('#mm').val();
+    var dd = $('#dd').val();
+    var no = $('#no').val();
+    var hang = $('#hang').val();
+    var beforeprice = $('#beforeprice').val();
+    var price = $('#price').val();
+    var beforeqty = $('#beforeqty').val();
+    var qty = $('#qty').val();
+    var beforetotal = $('#beforetotal').val();
+    var total = $('#total').val();
+    var memo = $('#memo').val();
+
+	alert(vendname);
+	var obj = {"seq":seq,"yyyy":yyyy,"mm":mm,"dd":dd,"no":no,"hang":hang,"price":price,"beforeprocode":beforeprocode,"vendcode":vendcode,"vendname":vendname,
+      "beforeprice":beforeprice,"qty":qty,"beforeqty":beforeqty,"total":total,"beforetotal":beforetotal,"memo":memo}
+
+	$.ajax({
+    	type: 'POST',
+        data: JSON.stringify(obj),
+        datatype: 'json',
+        url: 'buyUpdateJsonAjax',
+        contentType: 'application/json',
+        success: function(data) {
+        	var td = publicselectedrow.children();
+        	td.eq(3).text(data.proname);
+        	td.eq(4).text(data.price);
+        	td.eq(5).text(data.qty);
+        	td.eq(6).text(data.total);
+        	$('#successmessage').css('display','block')
+        	.delay(1200).queue(function(){
+        		$('#successmessage').css('display','none').dequeue();
+        	});
+        	
+        },
+        error: function(xhr, status, error) {
+        	alert('ajax error' + xhr.status);
+        }
+	});
+});
+
+$('#deleteBtn').on('click',function(){
+	$('.header.modalmsg').text('삭제하시겠습니까?');
+	$('.mini.modal.buyDeletemodal').modal('show');
+	$('#deleteCancel').on('click',function(){
+		$('.mini.modal.buyDeletemodal').modal('hide');
+	});
+	$('#deleteOK').on('click',function(){
+       	var seq = publicselectedrow.children().eq(0).text();
+       	
+       	$.ajax({
+			type: 'POST',
+			data: { seq:seq },
+			datatype: 'json',
+			url: 'buyRowItemDeleteAjax',
+			contentType: 'application/x-www-form-urlencoded; charset=euc-kr',
+			success: function(data) {
+				publicselectedrow.remove();
+			},
+			error: function(xhr, status, error) {
+				alert('ajax error:' + xhr.status + error);
+			}
+		});
+		
+		$('.mini.modal.buyDeletemodal').modal('hide');
+	});
+});
+
+</script>
+</th:block>
+</html>

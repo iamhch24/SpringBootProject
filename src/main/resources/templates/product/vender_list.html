@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+
+<div layout:fragment="content" id="content">
+	<div class="ui ">
+		<div class="ui icon message" id="successmessage" style="display: none">
+			<i class="notched circle loading icon"></i>
+			<div class="content">
+				<div class="msg-header" id="resultmessage">수정되었습니다.</div>
+			</div>
+		</div>
+		<table id="venderExample" class="display nowrap" style="width: 100%">
+			<thead>
+				<tr>
+					<th>거래처 코드</th>
+					<th>거래처명</th>
+					<th>사업자번호</th>
+					<th>사업형태</th>
+					<th>대표이사</th>
+					<th>우편번호</th>
+					<th>주소</th>
+					<th>전화번호</th>
+					<th>비고</th>
+				</tr>
+			</thead>
+			<tbody>
+			<th:block th:each="vender : ${venders}">
+				<tr>
+					<td data-th-text="${vender.code}" th:onclick="'location.href=\''+@{venderUpdate(code=${vender.code})}+'\''"  style="cursor:pointer"></td>
+					<td data-th-text="${vender.name}"></td>
+					<td data-th-text="${vender.busno1+'-'+vender.busno2+'-'+vender.busno3}"></td>
+					<td data-th-text="${vender.biztype}"></td>
+					<td data-th-text="${vender.ceoname}"></td>
+					<td data-th-text="${vender.zipcode}"></td>
+					<td data-th-text="${vender.newaddr+vender.detailaddr}"></td>
+					<td data-th-text="${vender.officeno1+'-'+vender.officeno2+'-'+vender.officeno3}"></td>
+					<td><i class="trash outline icon" id="deletebtn"  style="cursor:pointer"></i></td>
+				</tr>
+			</th:block>
+			</tbody>
+		</table>
+		<div class="ui mini modal">
+			<i class="close icon"></i>
+			<div class="header modalmsg">정말 삭제하시겠습니까?</div>
+			<div class="actions">
+				<div class="ui negative button" id="deleteOK">Yes 삭제</div>
+				<div class="ui positive right labeled icon button" id="deleteCancel">
+					No 취소<i class="checkmark icon"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block layout:fragment="js">
+<script>
+
+	$('#venderExample').DataTable({
+		deferRender: true,
+		scrollY: 400,
+		scrollCollapse: true,
+		scroller: true
+	});
+	
+	
+	$(document).on('click', '#venderExample td #deletebtn', function() {
+		var row = $(this).closest('tr');
+		var td = row.children();
+		var code = td.eq(0).text();
+	
+		$('.mini.modal').modal('show');
+		$('#deleteOK').on('click', function() {
+			$.ajax({
+				type: 'POST',
+				data: { code: code },
+				datatype: 'json',
+				url: 'venderDeleteAjax',
+				success: function(data) {
+					if (data === 'Y') {
+						$('#resultmessage').text("성공적으로 삭제되었습니다.");
+						row.remove();
+					}
+					else { $('#resultmessage').text("삭제되지 않았습니다. 확인이 필요합니다."); }
+
+					$('#successmessage').css('display', "block")
+						.delay(1200).queue(function() {
+							$('#successmessage').css('display', "none").dequeue();
+						});
+
+					$('.mini.modal').modal('hide');
+				},
+				error: function(xhr, status, error) {
+					alert('ajax error:' + xhr.status + error);
+				}
+			});
+		});
+
+		$('#deleteCancel').on('click', function() {
+			$('.mini.modal').modal('hide');
+		});
+	});	
+
+</script>
+</th:block>
+
+</html>

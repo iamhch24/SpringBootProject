@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="css">
+<style>
+.wrapper{
+	width: 80%;
+}
+</style>
+</th:block>
+
+<div layout:fragment="content" id="content">
+	<form class="ui form" method="post" action="product_insertSave" id="productForm">
+		<div class="wrapper" >
+			<h2 class="ui center aligned icon header">
+			<i class="clipboard outline icon"></i> 
+			상품등록
+			</h2>		
+			<div class="field">
+				<label>상품코드</label>
+				<div class="ui action left icon input">
+					<input type="text" name="code" id="code" required> <i class="icon user"></i>
+  					<button class="ui button" type="button" id="code-confirm">중복체크</button>
+				</div>
+			</div>
+			<div class="two fields">
+				<div class="field">
+					<label>상품명</label>
+					<div class="ui left icon input">
+						<input type="text" name="name"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>상품규격</label>
+					<div class="ui left icon input">
+						<input type="text" name="capacity"> <i class="icon user"></i>
+					</div>
+				</div>
+			</div>
+			<div class="field">
+				<label>상품설명</label>
+				<div class="ui left icon input">
+					<input type="text" name="explanation"> <i class="icon user"></i>
+				</div>
+			</div>
+			<div class="two fields">
+				<div class="field">
+					<label>매입단가</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="buyprice"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>매출단가</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="saleprice"> <i class="icon user"></i>
+					</div>
+				</div>
+			</div>
+			<div class="three fields">
+				<div class="field">
+					<label>전년재고</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="preyystock"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>전월재고</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="premmstock"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>전일재고</label>
+					<div class="ui left icon input">
+						<input type="number" value="0" name="preddstock"> <i class="icon user"></i>
+					</div>
+				</div>
+			</div>
+			<div class="field">
+				<label>현재 재고</label>
+				<div class="ui left icon input">
+					<input type="number" value="0" name="stock"> <i class="icon user"></i>
+				</div>
+			</div>
+			
+			<div class="ui horizontal segments">
+				<div class="ui segment">		
+					<div class="two fields">
+						<div class="field">
+							<label>1월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy01"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>1월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale01"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>				
+					<div class="two fields">
+						<div class="field">
+							<label>2월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy02"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>2월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale02"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>3월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy03"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>3월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale03"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>4월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy04"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>4월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale04"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>5월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy05"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>5월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale05"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>6월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy06"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>6월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale06"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ui segment">
+					<div class="two fields">
+						<div class="field">
+							<label>7월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy07"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>7월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale07"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>				
+					<div class="two fields">
+						<div class="field">
+							<label>8월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy08"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>8월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale08"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>9월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy09"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>9월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale09"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>10월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy10"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>10월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale10"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>11월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy11"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>11월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale11"> <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>12월 매입</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="buy12"> <i class="icon user"></i>
+							</div>
+						</div>
+						<div class="field">
+							<label>12월 매출</label>
+							<div class="ui left icon input">
+								<input type="number" value="0" name="sale12" > <i class="icon user"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>		
+			<div class="two fields">
+				<div class="field">
+					<div class="ui buttons fluid">
+						<button class="ui positive button" type="submit" id="SignUp">Sign Up</button>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui buttons fluid">
+						<button class="ui button" type="reset">clear</button>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</form>
+</div>
+
+
+<th:block layout:fragment="js">
+<script>
+
+		
+	$('#code-confirm').on('click', function() {
+		const code = $('#code').val();
+
+		if (code === "") {
+			$('.modalmsg').text("상품코드를 입력하세요");
+			$('.mini.modal').modal('show');
+			return false;
+		} else
+			$.ajax({
+				type: 'POST',
+				data: { code: code },
+				datatype: 'json',
+				url: 'codeConfirmAjax',
+				success: function(data) {
+					let msg = "";
+					if (data == 'yes') {
+						msg = "사용중인 코드번호입니다.";
+						$('#code').val('');
+						$('#code').focus();
+					} else {
+						msg = "사용가능한 코드번호입니다.";
+					}
+					$('.modalmsg').text(msg);
+					$('.mini.modal').modal('show');
+				},
+				error: function(xhr, status, error) {
+					alert('ajax error:' + xhr.status + error);
+				}
+			});
+	});
+
+
+</script>
+</th:block>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="css">
+<style>
+.wrapper{
+	margin: 0 auto;
+	width: 60%;
+
+}
+</style>
+</th:block>
+	
+<div layout:fragment="content" id="content">
+	<form class="ui form " method="post" action="member_insertSave" id="memberForm">
+		<div class="wrapper" >
+			<div class="field">
+				<label>label 1a</label>
+				<div class="ui left icon input">
+					<input type="text"> <i class="icon user"></i>
+				</div>
+			</div>
+			<div class="field">
+				<label>label 1b</label>
+				<div class="ui action left icon input">
+					<input type="text"> <i class="icon user"></i>
+  					<button class="ui button" type="button">중복체크</button>
+				</div>
+			</div>
+			<div class="two fields">
+				<div class="field">
+					<label>label 2a</label>
+					<div class="ui left icon input">
+						<input type="text"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>label 2b</label>
+					<div class="ui left icon input">
+						<input type="text"> <i class="icon user"></i>
+					</div>
+				</div>
+			</div>
+			<div class="three fields">
+				<div class="field">
+					<label>label 3a</label>
+					<div class="ui left icon input">
+						<input type="text"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>label 3b</label>
+					<div class="ui left icon input">
+						<input type="text"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>label 3c</label>
+					<div class="ui left icon input">
+						<input type="text"> <i class="icon user"></i>
+					</div>
+				</div>
+			</div>
+			<div class="four fields">
+				<div class="field">
+					<label>label 4a</label>
+					<div class="ui left icon input">
+						<input type="text"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>label 4b</label>
+					<div class="ui left icon input">
+						<input type="text"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>label 4c</label>
+					<div class="ui left icon input">
+						<input type="text"> <i class="icon user"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>label 4d</label>
+					<div class="ui left icon input">
+						<input type="text"> <i class="icon user"></i>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</form>
+	
+	<div class="ui mini modal">
+		<i class="close icon"></i>
+		<div class="header modalmsg">E-mail 중복체크</div>
+		<div class="actions">
+			<div class="ui negative button">Close</div>
+			<div class="ui positive right labeled icon button">
+				Yes <i class="checkmark icon"></i>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block layout:fragment="js">
+<script>
+
+</script>
+</th:block>
+
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.naver.iamhch24.dao.VenderDao">
+		
+	<select id="selectOne" parameterType="String" resultType="com.naver.iamhch24.entities.Vender">
+		select * from vender where code=#{code}
+	</select>	
+
+	<select id="countAll" resultType="int">
+		select count(*) from vender
+	</select>
+	
+	<insert id="insertRow" parameterType="hashMap">
+		insert into vender(
+			code, name, busno1, busno2, busno3, biztype, ceoname, zipcode, 
+			newaddr, oldaddr, detailaddr, officeno1, officeno2, officeno3
+		)
+		values(
+			#{code}, #{name}, #{busno1}, #{busno2}, #{busno3}, #{biztype}, #{ceoname}, #{zipcode}, 
+			#{newaddr}, #{oldaddr}, #{detailaddr}, #{officeno1}, #{officeno2}, #{officeno3}
+		)
+	</insert>
+	
+	<update id="updateRow" parameterType="hashMap">
+		update vender set
+			code=#{code}, name=#{name}, busno1=#{busno1}, busno2=#{busno2}, busno3=#{busno3}, 
+			biztype=#{biztype}, ceoname=#{ceoname}, zipcode=#{zipcode}, 
+			newaddr=#{newaddr}, oldaddr=#{oldaddr}, detailaddr=#{detailaddr}, 
+			officeno1=#{officeno1}, officeno2=#{officeno2}, officeno3=#{officeno3}
+		where code = #{code} 
+	</update>
+	
+	<update id="updateAjax">
+		update vender set memlevel = #{memlevel} 
+		where code = #{code} 
+	</update>
+
+	<delete id="deleteAjax">
+		delete from vender 
+		where code = #{code} 
+	</delete>
+	
+	<select id="selectAll" resultType="com.naver.iamhch24.entities.Vender">
+		select * from vender;
+	</select>
+
+</mapper>

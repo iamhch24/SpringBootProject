@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block layout:fragment="css">
+<style>
+.wrapper{
+	width: 100%;
+}
+</style>
+</th:block>
+
+<div layout:fragment="content" id="content">
+	<form class="ui form" method="post" action="balance_insertSave" id="venderForm">
+		<div class="wrapper" >
+			<h2 class="ui center aligned icon header">
+			<i class="clipboard outline icon"></i> 
+			거래내역 등록
+			</h2>		
+<div class="ui horizontal segments">
+	<div class="ui segment">		
+		<div class="field">
+			<label>new yyyy</label>
+			<div class="ui action left icon input">
+				<input type="text" name="newyyyy" > <i class="icon user"></i>
+			</div>
+		</div>
+		<div class="field">
+			<label>yyyy</label>
+			<div class="ui left icon input">
+				<input type="text" name="yyyy"> <i class="icon user"></i>
+			</div>
+		</div>
+		<div class="field">
+			<label>거래처 코드</label>
+			<div class="ui left icon input">
+				<input type="text" name="vendcode"> <i class="icon user"></i>
+			</div>
+		</div>
+		<div class="field">
+			<label>거래처명</label>
+			<div class="ui left icon input">
+				<input type="text" name="vendname"> <i class="icon user"></i>
+			</div>
+		</div>
+		<div class="field">
+			<label>전년 이월</label>
+			<div class="ui left icon input">
+				<input type="number" value="0" name="preyybalance"> <i class="icon user"></i>
+			</div>
+		</div>
+		<div class="field">
+			<label>거래 총액</label>
+			<div class="ui left icon input">
+				<input type="number" value="0" name="dealtot"> <i class="icon user"></i>
+			</div>
+		</div>
+		<div class="field">
+			<label>결재 총액</label>
+			<div class="ui left icon input">
+				<input type="number" value="0" name="paytot"> <i class="icon user"></i>
+			</div>
+		</div>
+		<div class="field">
+			<label>현재 잔액</label>
+			<div class="ui left icon input">
+				<input type="number" value="0" name="balance"> <i class="icon user"></i>
+			</div>
+		</div>		
+	</div>
+	<div class="ui segment">
+		<table>
+		<thead>
+			<tr>
+				<td>월별</td>
+				<td>전월 이월</td>
+				<td>거래금액</td>
+				<td>결재금액</td>
+				<td>잔액</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance01"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal01"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay01"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance01"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>2월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance02"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal02"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay02"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance02"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>3월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance03"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal03"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay03"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance03"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>4월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance04"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal04"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay04"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance04"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>5월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance05"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal05"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay05"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance05"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>6월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance06"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal06"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay06"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance06"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>7월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance07"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal07"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay07"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance07"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>8월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance08"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal08"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay08"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance08"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>9월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance09"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal09"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay09"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance09"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>10월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance10"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal10"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay10"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance10"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>11월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance11"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal11"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay11"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance11"> <i class="icon user"></i></div></td>
+			</tr>										
+			<tr>
+				<td>12월</td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="prebalance12"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="deal12"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="pay12"> <i class="icon user"></i></div></td>
+				<td><div class="ui left icon input"><input type="number" value="0" name="balance12"> <i class="icon user"></i></div></td>
+			</tr>										
+		</tbody>
+		</table>
+	</div>
+</div>
+	<div class="two fields">
+		<div class="field">
+			<div class="ui buttons fluid">
+				<button class="ui positive button" type="submit" id="SignUp">Sign Up</button>
+			</div>
+		</div>
+		<div class="field">
+			<div class="ui buttons fluid">
+				<button class="ui button" type="reset">clear</button>
+			</div>
+		</div>
+	</div>	
+			
+</div>
+	</form>
+</div>
+
+
+<th:block layout:fragment="js">
+<script>
+
+</script>
+</th:block>
+</html>

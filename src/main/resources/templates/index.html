@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}" th:lang="${session.lang}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout">
+    
+	<div layout:fragment="content" id="content">     
+		<div class="ui middle aligned center aligned grid">
+			<div class="eight wide column">
+	
+<!--         <h1>index page...</h1>	
+		<h1 th:text="#{main.content}"></h1>
+		<h3> Index page</h3>
+		<div class="row">
+		<p th:text="#{product}"></p>
+		</div>
+ -->	
+			<th:block th:if="${session.sessionemail != null}">
+				<h2>[Session info]</h2>
+				<h3>
+				<p><label>세션메일::</label><span data-th-text="${session.sessionemail}"></span></p>
+				<p><label>세션이름::</label><span data-th-text="${session.sessionname}"></span></p>
+				<p><label>세션사진::</label><span data-th-text="${session.sessionphoto}"></span></p>
+				<p><label>세션레벨::</label><span data-th-text="${session.sessionlevel}"></span></p>
+				<p><label>세션언어::</label><span data-th-text="${session.lang}"></span></p>
+				</h3>
+			</th:block>
+			</div>
+		</div>
+	</div>
+    
+<th:block layout:fragment="js">
+<script>
+   
+</script>
+</th:block>    
+    
+</html>

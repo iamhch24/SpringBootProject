@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.naver.iamhch24.dao.BoardDao">
+
+	<select id="selectOne" resultType="com.naver.iamhch24.entities.Board">
+		select * from board where b_seq=#{b_seq}
+	</select>
+
+	<select id="countAll" resultType="Integer">
+		select count(*) from board
+	</select>
+
+	<insert id="insertRow">
+		insert into board(b_seq, b_ref, b_step, b_email,
+		b_name, b_title, b_content, b_hit, b_attach, b_inputtime, b_inputip )
+		values(
+		(select ifnull(max(b_seq)+1,1) from board as board_alias),
+		(select ifnull(max(b_seq)+1,1) from board as board_alias),
+		0, #{b_email}, #{b_name}, #{b_title}, #{b_content}, 0, #{b_attach},
+		#{b_inputtime}, #{b_inputip} )
+	</insert>
+
+	<insert id="insertReplyRow">
+		insert into board(b_seq, b_ref, b_step, b_email,
+		b_name, b_title, b_content, b_hit, b_attach, b_inputtime, b_inputip )
+		values(
+		(select ifnull(max(b_seq)+1,1) from board as board_alias),
+		#{b_ref}, (select max(b_step)+1 from board as board_max where b_ref =
+		#{b_ref}), #{b_email}, #{b_name}, #{b_title}, #{b_content}, 0,
+		#{b_attach}, #{b_inputtime}, #{b_inputip} )
+	</insert>
+
+	<update id="addHit">
+		update board set b_hit = b_hit+1 where b_seq =
+		#{b_seq}
+	</update>
+
+	<update id="updateRow">
+		update board set b_title=#{b_title},
+		b_content=#{b_content}
+		where b_seq = #{b_seq}
+	</update>
+
+	<delete id="deleteRow">
+		delete from board
+		where b_seq = #{b_seq}
+	</delete>
+
+	<update id="updateAjax">
+		update board set b_seq = #{b_seq}
+		where b_seq = #{b_seq}
+	</update>
+
+	<delete id="deleteAjax">
+		delete from board
+		where b_seq = #{b_seq}
+	</delete>
+
+	<select id="selectAll"
+		resultType="com.naver.iamhch24.entities.Board">
+		select * from board
+	</select>
+
+	<select id="selectPageList"
+		resultType="com.naver.iamhch24.entities.Board">
+		select * from board
+	</select>
+
+	<select id="selectPagingList" parameterType="hashMap"
+		resultType="com.naver.iamhch24.entities.Board">
+		select * from board where
+		b_title like concat('%',#{find},'%') or
+		b_name like concat('%',#{find},'%') or
+		b_content like concat('%',#{find},'%')
+		order by b_ref desc, b_step asc
+		limit #{startrow}, #{endrow}
+	</select>
+
+	<!-- <select id="findListBoard" parameterType="hashMap" resultType="com.naver.iamhch24.entities.Board"> 
+		select * from board where b_title like concat('%',#{find},'%') or b_name 
+		like concat('%',#{find},'%') or b_content like concat('%',#{find},'%') order 
+		by b_ref desc, b_step asc limit #{startrow}, #{endrow} </select> -->
+
+	<select id="selectCount" resultType="Integer">
+		select count(*) from board
+		where
+		b_title like concat('%',#{find},'%') or
+		b_name like concat('%',#{find},'%') or
+		b_content like concat('%',#{find},'%')
+		order by b_ref desc, b_step asc
+	</select>
+
+	<!-- <select id="selectCountFirst" resultType="Integer"> select count(*) 
+		from board </select> -->
+
+
+</mapper>

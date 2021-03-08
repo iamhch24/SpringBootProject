@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<div layout:fragment="content" id="content">
+	<div class="ui ">
+		<div class="ui icon message" id="successmessage" style="display: none">
+			<i class="notched circle loading icon"></i>
+			<div class="content">
+				<div class="msg-header" id="resultmessage">수정되었습니다.</div>
+			</div>
+		</div>
+		<table id="memberExample" class="display nowrap" style="width: 100%">
+			<thead>
+				<tr>
+					<th>image</th>
+					<th>email</th>
+					<th>name</th>
+					<th>phone</th>
+					<th>level</th>
+					<th>Option</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="member : ${members}">
+					<td><img data-th-src="${member.photo}" class="nicknameprofile"></td>
+					<td data-th-text="${member.email}"></td>
+					<td data-th-text="${member.name}"></td>
+					<td data-th-text="${member.phone}"></td>
+					<td><input type="text" style="width: 20px" maxlength="1"
+						data-th-value="${member.memlevel}"></td>
+					<td>
+						<i class="edit outline icon" id="editbtn"></i> 
+						<i class="trash outline icon" id="deletebtn"></i>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="ui mini modal">
+			<i class="close icon"></i>
+			<div class="header modalmsg">정말 삭제하시겠습니까?</div>
+			<div class="actions">
+				<div class="ui negative button" id="deleteOK">Yes 삭제</div>
+				<div class="ui positive right labeled icon button" id="deleteCancel">
+					No 취소<i class="checkmark icon"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<th:block layout:fragment="js">
+<script>
+
+	$('#memberExample').DataTable({
+		deferRender: true,
+		scrollY: 400,
+		scrollCollapse: true,
+		scroller: true
+	});
+	
+
+	$(document).on('click', '#memberExample td #editbtn', function() {
+		var row = $(this).closest('tr');
+		var td = row.children();
+		var email = td.eq(1).text();
+		var level = td.eq(4).children().val();
+
+		$.ajax({
+			type: 'POST',
+			data: { email: email, memlevel: level },
+			datatype: 'json',
+			url: 'memberUpdateAjax',
+			success: function(data) {
+				if (data === 'Y') { $('#resultmessage').text("성공적으로 수정되었습니다."); }
+				else { $('#resultmessage').text("수정되지 않았습니다. 확인이 필요합니다."); }
+
+				$('#successmessage').css('display', "block")
+					.delay(1200).queue(function() {
+						$('#successmessage').css('display', "none").dequeue();
+					});
+			},
+			error: function(xhr, status, error) {
+				alert('ajax error:' + xhr.status + error);
+			}
+		});
+
+	});
+
+	$(document).on('click', '#memberExample td #deletebtn', function() {
+		var row = $(this).closest('tr');
+		var td = row.children();
+		var email = td.eq(1).text();
+
+		$('.mini.modal').modal('show');
+		$('#deleteOK').on('click', function() {
+			$.ajax({
+				type: 'POST',
+				data: { email: email },
+				datatype: 'json',
+				url: 'memberDeleteAjax',
+				success: function(data) {
+					if (data === 'Y') {
+						$('#resultmessage').text("성공적으로 삭제되었습니다.");
+						row.remove();
+					}
+					else { $('#resultmessage').text("삭제되지 않았습니다. 확인이 필요합니다."); }
+
+					$('#successmessage').css('display', "block")
+						.delay(1200).queue(function() {
+							$('#successmessage').css('display', "none").dequeue();
+						});
+
+					$('.mini.modal').modal('hide');
+				},
+				error: function(xhr, status, error) {
+					alert('ajax error:' + xhr.status + error);
+				}
+			});
+		});
+
+		$('#deleteCancel').on('click', function() {
+			$('.mini.modal').modal('hide');
+		});
+	});
+	
+</script>
+</th:block>
+
+
+</html>

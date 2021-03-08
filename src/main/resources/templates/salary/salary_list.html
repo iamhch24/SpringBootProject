@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}"
+	th:lang="${session.lang}"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+
+<div layout:fragment="content" id="content">
+	<div class="ui ">
+		<div class="ui icon message" id="successmessage" style="display: none">
+			<i class="notched circle loading icon"></i>
+			<div class="content">
+				<div class="msg-header" id="resultmessage">수정되었습니다.</div>
+			</div>
+		</div>
+		<table id="salaryExample" class="display nowrap" style="width: 100%">
+			<thead>
+				<tr>
+					<th>empno</th>
+					<th>depart</th>
+					<th>name</th>
+					<th>partner</th>
+					<th>dependent20</th>
+					<th>dependent60</th>
+					<th>disabled</th>
+					<th>womanpower</th>
+					<th>pay</th>
+					<th>extra</th>
+					<th>yn</th>
+					<th>function</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="salary : ${salarys}">
+					<td data-th-text="${salary.empno}" th:onclick="'location.href=\''+@{salaryUpdate(empno=${salary.empno})}+'\''"  style="cursor:pointer"></td>
+					<td data-th-text="${salary.depart}"></td>
+					<td data-th-text="${salary.name}"></td>
+					<td data-th-text="${salary.partner}"></td>
+					<td data-th-text="${salary.dependent20}"></td>
+					<td data-th-text="${salary.dependent60}"></td>
+					<td data-th-text="${salary.disabled}"></td>
+					<td data-th-text="${salary.womanpower}"></td>
+					<td data-th-text="${salary.pay}"></td>
+					<td data-th-text="${salary.extra}"></td>
+					<td>
+					<select name="yn">
+						<option th:selected="${salary.yn == 'y'}" value="y">y</option>
+						<option th:selected="${salary.yn == 'n'}" value="n">n</option>
+					</select>
+					</td>
+					<td><i class="edit outline icon" id="editbtn" style="cursor:pointer"></i> 
+					<i class="trash outline icon" id="deletebtn"  style="cursor:pointer"></i></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="ui mini modal">
+			<i class="close icon"></i>
+			<div class="header modalmsg">정말 삭제하시겠습니까?</div>
+			<div class="actions">
+				<div class="ui negative button" id="deleteOK">Yes 삭제</div>
+				<div class="ui positive right labeled icon button" id="deleteCancel">
+					No 취소<i class="checkmark icon"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block layout:fragment="js">
+<script>
+
+	$('#salaryExample').DataTable({
+		deferRender: true,
+		scrollY: 400,
+		scrollCollapse: true,
+		scroller: true
+	});
+	
+	
+	$(document).on('click', '#salaryExample td #editbtn', function() {
+
+		var row = $(this).closest('tr');
+		var td = row.children();
+		var empno = td.eq(0).text();
+		var yn = td.eq(10).children().val();
+		
+		$.ajax({
+			type: 'POST',
+			data: { empno: empno, yn: yn },
+			datatype: 'json',
+			url: 'salaryUpdateAjax',
+			success: function(data) {
+				if (data === 'Y') { $('#resultmessage').text("성공적으로 수정되었습니다."); }
+				else { $('#resultmessage').text("수정되지 않았습니다. 확인이 필요합니다."); }
+
+				$('#successmessage').css('display', "block")
+					.delay(1200).queue(function() {
+						$('#successmessage').css('display', "none").dequeue();
+					});
+			},
+			error: function(xhr, status, error) {
+				alert('ajax error:' + xhr.status + error);
+			}
+		});
+
+	});
+
+	$(document).on('click', '#salaryExample td #deletebtn', function() {
+		var row = $(this).closest('tr');
+		var td = row.children();
+		var empno = td.eq(0).text();
+	
+		alert(empno);
+
+
+		$('.mini.modal').modal('show');
+		$('#deleteOK').on('click', function() {
+			$.ajax({
+				type: 'POST',
+				data: { empno: empno },
+				datatype: 'json',
+				url: 'salaryDeleteAjax',
+				success: function(data) {
+					if (data === 'Y') {
+						$('#resultmessage').text("성공적으로 삭제되었습니다.");
+						row.remove();
+					}
+					else { $('#resultmessage').text("삭제되지 않았습니다. 확인이 필요합니다."); }
+
+					$('#successmessage').css('display', "block")
+						.delay(1200).queue(function() {
+							$('#successmessage').css('display', "none").dequeue();
+						});
+
+					$('.mini.modal').modal('hide');
+				},
+				error: function(xhr, status, error) {
+					alert('ajax error:' + xhr.status + error);
+				}
+			});
+		});
+
+		$('#deleteCancel').on('click', function() {
+			$('.mini.modal').modal('hide');
+		});
+	});	
+
+</script>
+</th:block>
+
+</html>

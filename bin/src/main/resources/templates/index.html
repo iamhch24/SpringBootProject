@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}" th:lang="${session.lang}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout">
+     <div layout:fragment="content">
+        <h1>index page...<i class="france flag"></i></h1>	
+		<h1 th:text="#{main.content}"></h1>
+		<h3> Index page</h3>
+		<div class="row">
+		<p th:text="#{product}"></p>
+		<img src="/images/reply.png" width="20px" height="25px">
+		
+		</div>
+		
+		
+ 		<th:block th:if="${session.sessionemail != null}">
+			<h1>[Session info]</h1>
+			<h2 data-th-text="${session.sessionemail}"></h2>
+			<h2 data-th-text="${session.sessionname}"></h2>
+			<h2 data-th-text="${session.sessionphoto}"></h2>
+			<h2 data-th-text="${session.sessionlevel}"></h2>
+		</th:block>
+    </div>
+    
+<th:block layout:fragment="js">
+<script>
+   
+    	$('.ui.dropdown').dropdown({
+		onChange: function(lang) {
+			$.ajax({
+				type: 'POST',
+				data: { lang: lang },
+				datatype: 'json',
+				url: 'languageAjax',
+				async: false,
+				success: function(data) {
+					console.log(data);
+					setTimeout(function() {
+						window.location.reload();
+					}, 100);
+				},
+				error: function(xhr, status, error) {
+				}
+			});
+		},
+		forceSelection: false,
+		selectOnKeydown: false,
+		showOnFocus: false,
+		on: "hover"
+	});
+
+</script>
+</th:block>    
+    
+</html>
